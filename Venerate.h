@@ -9,8 +9,6 @@
 
 #define maxrxbytes 4
 
-#define ETMEM_levela 0x4009
-#define ETMEM_levelb 0x400E
 #define ETMEM_panellock 0x400F
 #define ETMEM_knoba 0x4064
 #define ETMEM_knobb 0x4065
@@ -75,11 +73,11 @@
 #define ETMEM_timeoffa 0x4099
 #define ETMEM_timeopta 0x409A 
 #define ETMEM_ramp 0x4006 // 0-255 also ramp at 400b, 409c, 419c
-#define ETMEM_glevela 0x40A5
-#define ETMEM_glevelmina 0x40A6
-#define ETMEM_glevelmaxa 0x40A7
-#define ETMEM_glevelratea 0x40A8
-#define ETMEM_glevelopta 0x40AB
+#define ETMEM_levela 0x40A5
+#define ETMEM_levelmina 0x40A6
+#define ETMEM_levelmaxa 0x40A7
+#define ETMEM_levelratea 0x40A8
+#define ETMEM_levelopta 0x40AB
 #define ETMEM_freqa 0x40AE
 #define ETMEM_freqmaxa 0x40AF
 #define ETMEM_freqmina 0x40B0
@@ -92,11 +90,11 @@
 #define ETMEM_timeonb 0x4198
 #define ETMEM_timeoffb 0x4199
 #define ETMEM_timeoptb 0x419A
-#define ETMEM_glevelb 0x41A5
-#define ETMEM_glevelminb 0x41A6
-#define ETMEM_glevelmaxb 0x41A7
-#define ETMEM_glevelrateb 0x41A8
-#define ETMEM_gleveloptb 0x41AB
+#define ETMEM_levelb 0x41A5
+#define ETMEM_levelminb 0x41A6
+#define ETMEM_levelmaxb 0x41A7
+#define ETMEM_levelrateb 0x41A8
+#define ETMEM_leveloptb 0x41AB
 #define ETMEM_freqb 0x41AE
 #define ETMEM_freqmaxb 0x41AF
 #define ETMEM_freqminb 0x41B0
