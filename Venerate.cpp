@@ -125,7 +125,8 @@ boolean Venerate::setbyte(int n, int b) {
 
 boolean Venerate::hello()
 {
-    if (_state != 0) {
+  bool trymod = true;
+  if (_state != 0) {
         if (_debug) _debugserial->println("State !0");
         return Venerate::isconnected();
     }
@@ -157,12 +158,14 @@ boolean Venerate::hello()
         } else {
             _mod = rx[1] ^ 0x55;
             if (_debug) {
-                _debugserial->print(rx[1], HEX);
+                _debugserial->print(_mod, HEX);
                 _debugserial->println("=mod");
             }
             EEPROM.write(_boxid, _mod);
+	    trymod = false;
         }
-    } else {
+    }
+    if (trymod) {
         _mod = EEPROM.read(_boxid);
         if (_debug) {
             _debugserial->print(_mod, HEX);
