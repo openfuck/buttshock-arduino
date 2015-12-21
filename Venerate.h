@@ -13,22 +13,18 @@
 #define ETMEM_knoba 0x4064
 #define ETMEM_knobb 0x4065
 #define ETMEM_knobma 0x4061
-#define ETMEM_pushbutton 0x4070
 
 // push panel buttons: 
-// (from protocol analysis when box switches to 'user1' mode 20121116, what other things can we push?)
-// 4 used when setting mode
-// 5 not sure, ramps 0-100
-// 15 makes display say 'adjust?'
-// 16 used when setting mode
-// 17 split mode
 
+#define ETMEM_pushbutton 0x4070
 #define ETBUTTON_ok 3
 #define ETBUTTON_setmode 4
+// 5 not sure, ramps 0-100
 #define ETBUTTON_up 8
 #define ETBUTTON_down 9
 #define ETBUTTON_menu 10
 #define ETBUTTON_split 12
+// 15 makes display say 'adjust?'
 #define ETBUTTON_lockmode 16
 #define ETBUTTON_splitmode 17
 
