@@ -41,8 +41,8 @@ CRGB LEDB[NUM_LEDS];
 // Board 2 is a leonardo with 2 strings of LEDs
 // 60/metre .5 metre each string connected to separate pins
 byte numleds = 30;
-WS2812 LEDA(numleds);
-WS2812 LEDB(numleds);
+CRGB LEDA(numleds);
+CRGB LEDB(numleds);
 #define ledapin 7
 #define ledbpin 11
 #endif
@@ -148,8 +148,8 @@ void bargraph(void) {
         levela = widtha = freqa = 0;
     }
     if (knoba == 0 || knobb == 0 || barcount++ > 5) {
-      byte lastb = knobb;
-      byte lasta = knoba;
+      int lastb = knobb;
+      int lasta = knoba;
       knobb = EBOX.getbyte(ETMEM_knobb);
       knoba = EBOX.getbyte(ETMEM_knoba);
       if (lasta == knoba && lastb == knobb) {
