@@ -11,7 +11,7 @@
 //
 // June 2015
 
-#include <WS2812.h>  // from https://github.com/cpldcpu/light_ws2812 o
+#include <FastLED.h>  //  from https://github.com/FastLED/FastLED/
 // we don't use the adafruit neopixel library to avoid interrupts and mess with serial port
 #include <EEPROM.h>  // for storing the mod byte
 #include <Venerate.h> // This is our own ET312 communication library 
@@ -29,9 +29,10 @@
 #ifdef board_prototype_1
 // Board 1 is a leonardo like, a dfrobot beetle with 2 strings of LEDs
 // 60/metre .5 metre each string connected to separate pins
-byte numleds = 30; 
-WS2812 LEDA(numleds);
-WS2812 LEDB(numleds);
+#define NUM_LEDS 30
+byte numleds = NUM_LEDS; 
+CRGB LEDA[NUM_LEDS];
+CRGB LEDB[NUM_LEDS];
 #define ledapin 9
 #define ledbpin 11
 #endif
@@ -53,13 +54,7 @@ Venerate EBOX = Venerate(0);
 // Set all LEDs off
 //
 void clearleds() {
-  cRGB value = { 0, 0, 0};
-  for (byte i = 0; i < (numleds); i++) {
-    LEDA.set_crgb_at(i, value);
-    LEDB.set_crgb_at(i, value);
-  }
-  LEDA.sync();
-  LEDB.sync();
+  FastLED.clear();
 }
 
 void setup()
@@ -68,8 +63,8 @@ void setup()
   
   pinMode(13,OUTPUT);
 
-  LEDA.setOutput(ledapin);
-  LEDB.setOutput(ledbpin);
+  FastLED.addLeds<NEOPIXEL, ledapin>(LEDA, numleds);
+  FastLED.addLeds<NEOPIXEL, ledbpin>(LEDB, numleds);
   Serial1.begin(19200);
   EBOX.begin(Serial1);
   Serial.begin(19200);
@@ -84,9 +79,9 @@ void setup()
 // We always want full saturation so we just remove some of the calculations below
 // to save some processing effort
 
-cRGB h1v_to_rgb(byte inh, byte inv)
+CRGB h1v_to_rgb(byte inh, byte inv)
 {
-    cRGB rgb;
+    CRGB rgb;
     unsigned char region, p, q, t;
     unsigned int h, s, v, remainder;
 
@@ -153,9 +148,13 @@ void bargraph(void) {
         levela = widtha = freqa = 0;
     }
     if (knoba == 0 || knobb == 0 || barcount++ > 5) {
+      byte lastb = knobb;
+      byte lasta = knoba;
       knobb = EBOX.getbyte(ETMEM_knobb);
       knoba = EBOX.getbyte(ETMEM_knoba);
-      barcount = 0;
+      if (lasta == knoba && lastb == knobb) {
+        barcount = 0;
+      }
     }
     // let's try the frequency is the brightness, but the knob is the colour
     // int intensitya = max(10,(max(widtha-128,0) *4 + max(freqa-128,0)*2)/3);
@@ -167,27 +166,28 @@ void bargraph(void) {
     int intensitya = max(20,255-freqa); //max(0,freqa-64)+64;
     int intensityb = max(20,255-freqb);  //max(0,freqb-64)+64;
 
+    // FastLED uses rainbow colour map with 96 as green through to 255 as red
+
     // we want 255 redish and 0 greenish so lets shift
     // the hue so 255 is red and knob <24 is just floor near green
     byte hue = knobb+10;  // overflow okay
-    if (knobb < 64) hue = 74;
-    cRGB value = h1v_to_rgb( hue, intensityb);    
+    if (knobb < 62) hue = 74;
+    CRGB value = h1v_to_rgb( hue, intensityb);    
 
     for (byte i = 0; i < numleds; i++) {
-      if (levelb <= i * (256/numleds)) value = {0,0,0};
-      LEDB.set_crgb_at(numleds-1-i, value);
+      if (levelb <= i * (256/numleds)) value = CRGB::Black;
+      LEDB[numleds-1-i] = value;
     }
-    LEDB.sync();
 
     hue = knoba+10; // overflow okay
-    if (knoba < 62) hue = 72;
+    if (knoba < 62) hue = 74;
     value = h1v_to_rgb( hue, intensitya);  
 
     for (byte i = 0; i < numleds; i++) {
-      if (levela <= i * (256/numleds)) value = {0,0,0};
-      LEDA.set_crgb_at(numleds-1-i, value);
+      if (levela <= i * (256/numleds)) value = CRGB::Black;
+      LEDA[numleds-1-i] = value;
     }
-    LEDA.sync();
+    FastLED.show();
 }
 
 byte cylon = 0;
@@ -206,16 +206,15 @@ void loop()
   // Try to connect every couple of seconds, don't connect until first second
         if ((millis() - starttime) > 2000) {
            starttime = millis();
-           cRGB value = { 0, 0, 0 };
-           LEDA.set_crgb_at(cylon, value);
-           LEDB.set_crgb_at(cylon, value);
+           CRGB value = CRGB::Black;
+           LEDA[cylon] = value;
+           LEDB[cylon] = value;
            cylon++;
            if (cylon>numleds) cylon = 0;           
-           value = { 255, 255, 255 };  // 100 0 0 
-           LEDA.set_crgb_at(cylon, value);
-           LEDB.set_crgb_at(cylon, value);
-           LEDA.sync();          
-           LEDB.sync();           
+           value = CRGB( 0, 255, 0 ); 
+           LEDA[cylon]= value;
+           LEDB[cylon]= value;
+           FastLED.show();        
            digitalWrite(13,HIGH);
            EBOX.hello();
            digitalWrite(13,LOW);                          
