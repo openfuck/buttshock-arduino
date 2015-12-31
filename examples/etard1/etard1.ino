@@ -204,16 +204,18 @@ void loop()
     bargraph();
   } else {
   // Try to connect every couple of seconds, don't connect until first second
-        if ((millis() - starttime) > 2000) {
+        if ((millis() - starttime) > 1500) {
+           CRGB value = CRGB( 0, 255, 0 ); 
            starttime = millis();
-           CRGB value = CRGB::Black;
-           LEDA[cylon] = value;
-           LEDB[cylon] = value;
-           cylon++;
-           if (cylon>numleds) cylon = 0;           
-           value = CRGB( 0, 255, 0 ); 
-           LEDA[cylon]= value;
-           LEDB[cylon]= value;
+           for(int i = 0; i < NUM_LEDS; i++) { LEDA[i].fadeToBlackBy(128); LEDB[i].fadeToBlackBy(128);} 
+           if (cylon>=numleds) {
+             LEDA[2*numleds-2-cylon]= value;
+             LEDB[2*numleds-2-cylon]= value;
+           } else {
+             LEDA[cylon]= value;
+             LEDB[cylon]= value;
+           }             
+           if (cylon++>(numleds*2)-4) cylon = 0;  
            FastLED.show();        
            digitalWrite(13,HIGH);
            EBOX.hello();
