@@ -1,0 +1,10 @@
+* Materials used:
+
+- An Ardunio with a hardware serial port. One based on an ATmega32u4 and at 5v such as a Leonardo is ideal, we’ve used a Micro and a DF Robot Beetle.
+- Some Neopixel (WS2812B) display. For our build here we use a WS2812B strip, 1 metre long, 60 LED per metre. But really any number or style of these LEDs will work.
+- A RS232 to TTL board. Something that looks like this one. The ET-312B box talks RS232 and the Arduino talks TTL and the easiest and cheapest way to make the two talk is with a module
+- An Electrolytic capacitor (anything on hand will do, 10uF 16v something like that)
+-  A stereo 3.5mm socket and standard 3.5mm stereo jack to jack lead with right angle connectors
+- Box and mounting. We used a small ABS box from Maplin mounted on some leather straps
+- A USB charger and micro USB lead, or a chargable battery. We picked one up from some random home store which is rated 2100mAh and is good for a few hours
+
